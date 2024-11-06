@@ -31,7 +31,7 @@ metadata:
   name: ebs-static
 spec:
   nodeSelector:
-     topology.kubernetes.io: us-east-1a
+    topology.kubernetes.io: us-east-1a
   containers:
   - name: nginx
     image: nginx
@@ -41,4 +41,20 @@ spec:
   volumes:
   - name: ebs-static
     persistentVolumeClaim:
-      claimName: ebs-static      
+      claimName: ebs-static  
+---
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx
+spec:
+  type: LoadBalancer
+  selector:
+    purpose: ebs-static
+  ports:
+  - name: nginx-svc-port
+    protocol: TCP
+    port: 80 # service port
+    targetPort: 80 # container port
+    nodePort: 30007          
