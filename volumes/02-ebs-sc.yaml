@@ -4,4 +4,4 @@ reclaimPolicy: Retain
 metadata:
   name: expense-ebs  #
 provisioner: ebs.csi.aws.com
-volumeBindingMode: WaitForFirstConsumr # storage is created when prod is created.
+volumeBindingMode: WaitForFirstConsumer # storage is created when prod is created.
