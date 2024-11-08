@@ -25,4 +25,39 @@ spec:
   storageClassName: ""
   resources:
     requests:
-      storage: 5Gi    
+      storage: 5Gi  
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: efs-claim
+  labels:
+    purpose: efs-claim
+spec:
+  nodeSelector:
+    topology.kubernetes.io/zone: us-east-1a
+  containers:
+  - name: nginx
+    image: nginx
+    volumeMounts: # docker run -v hostpath:contaierpath
+    - name: efs-claim
+      mountPath: /usr/share/nginx/html
+  volumes:
+  - name: efs-claim
+    persistentVolumeClaim:
+      claimName: efs-claim
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx
+spec:
+  type: LoadBalancer
+  selector:
+    purpose: efs-claim
+  ports:
+  - name: nginx-svc-port
+    protocol: TCP
+    port: 80 # service port
+    targetPort: 80 # container port
+    nodePort: 30007        
